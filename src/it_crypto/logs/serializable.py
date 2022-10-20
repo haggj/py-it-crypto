@@ -15,3 +15,6 @@ class Serializable:
 
     def to_bytes(self) -> bytes:
         return self.to_json().encode()
+
+    def __str__(self):
+        return str(self.__class__) + json.dumps(self, default=vars, indent=4)

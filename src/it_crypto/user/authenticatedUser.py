@@ -1,9 +1,11 @@
 import uuid
+from typing import Callable
 
 from jwcrypto import jws
 from jwcrypto.common import json_encode, json_decode
 from jwcrypto.jwk import JWK
 
+from crypto.decryption import DecryptionService
 from crypto.encryption import EncryptionService
 from globals import SIGNING_ALG
 from logs.access_log import AccessLog, SignedAccessLog
@@ -24,8 +26,11 @@ class AuthenticatedUser(RemoteUser):
         self.decryption_key = decryption_key
         self.signing_key = signing_key
 
-    def encrypt(self, log: SignedAccessLog, receivers: list[RemoteUser]):
+    def encrypt(self, log: SignedAccessLog, receivers: list[RemoteUser]) -> str:
         return EncryptionService.encrypt(jwsAccessLog=log, sender=self, receivers=receivers)
+
+    def decrypt(self, jwe: str, fetch_user: Callable[[str], RemoteUser]) -> SignedAccessLog:
+        return DecryptionService.decrypt(jwe=jwe, receiver=self, fetch_user=fetch_user)
 
     def sign_data(self, data: bytes) -> str:
         token = jws.JWS(data)

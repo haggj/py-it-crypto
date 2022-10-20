@@ -1,6 +1,9 @@
 import json
 
-from jwcrypto import jwk, jwe
+from OpenSSL.crypto import load_certificate, FILETYPE_PEM, X509Store, X509StoreContext
+from cryptography import x509
+from cryptography.hazmat.primitives.serialization import load_pem_public_key
+from jwcrypto import jwk
 from jwcrypto.common import json_decode
 
 from logs.access_log import AccessLog
@@ -17,6 +20,16 @@ def proof_of_concept():
     public_key2 = jwk.JWK()
     private_key2 = jwk.JWK.generate(kty='RSA', size=2048)
     public_key2.import_key(**json_decode(private_key2.export_public()))
+
+    invalid_ca_pem = """-----BEGIN CERTIFICATE-----
+MIIBIDCByAIJAOGzO/GXoxxnMAoGCCqGSM49BAMCMBkxFzAVBgNVBAMMDkRldmVs
+b3BtZW50IENBMB4XDTIyMTAyMDEyNTM1M1oXDTIzMTAyMDEyNTM1M1owGTEXMBUG
+A1UEAwwORGV2ZWxvcG1lbnQgQ0EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQ6
+/g/D3megZw6gssZIltWsk9CmqlqBNutzLjriJmTOGODHwHrTfdWIz8O161QB46jQ
+qEgQrqzZK5H7X77BOlKwMAoGCCqGSM49BAMCA0cAMEQCICNvrFhNWpvO6vJAYGup
+KiKEtPpfv6Rxe/Psq2XYy+H2AiA7fQHzny5CFJn4WsDDJGsgVOlnSD3gfLJ63uqq
+M3s6nA==
+-----END CERTIFICATE-----"""
 
     ca_pem = '-----BEGIN CERTIFICATE-----\n' + \
              'MIIBITCByAIJAJTQXJMDfhh5MAoGCCqGSM49BAMCMBkxFzAVBgNVBAMMDkRldmVs\n' + \
@@ -53,7 +66,6 @@ def proof_of_concept():
                'XduiWCtxVbGYGkSviklavTsNnAIgI8h9WNqHZdPJDVyhPwwS5oggTkGZah0LYfc3\n' + \
                '8qphvbY=\n' + \
                '-----END CERTIFICATE-----';
-
 
     keyB_priv = '-----BEGIN PRIVATE KEY-----\n' + \
                 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg9XQgYCk62PfcaOKE\n' + \
@@ -93,13 +105,31 @@ def proof_of_concept():
 
     sender = AuthenticatedUser.from_pem("sender", keyA_pub, keyA_pub, keyA_priv, keyA_priv)
     receiver = AuthenticatedUser.from_pem("receiver", keyB_pub, keyB_pub, keyB_priv, keyB_priv)
-    access_log = AccessLog.generate()
-    access_log.monitor = sender.id
-    access_log.owner = receiver.id
-    log = sender.sign_access_log(access_log)
-    jwe = sender.encrypt(log, [receiver])
-    print(jwe)
+    log_in = AccessLog.generate()
+    log_in.monitor = sender.id
+    log_in.owner = receiver.id
+    singed_log = sender.sign_access_log(log_in)
+    jwe = sender.encrypt(singed_log, [receiver])
+
+    def fetchUser(id:str):
+        return sender
+
+    signed_log = receiver.decrypt(jwe, fetchUser)
+    log_out = signed_log.extract()
+    print(log_in)
+    print(log_out)
     # print(json.dumps(json.loads(jwe), indent=4))
+
+    # root_cert = load_certificate(FILETYPE_PEM, ca_pem.encode())
+    # untrusted_cert = load_certificate(FILETYPE_PEM, keyA_pub.encode())
+    # store = X509Store()
+    # store.add_cert(root_cert)
+    # store_ctx = X509StoreContext(store, untrusted_cert)
+    # print(store_ctx.verify_certificate())
+    # return
+    #
+    # ca_key = load_pem_public_key(ca_pem.encode())
+    # cert_to_check = x509.load_pem_x509_certificate(keyA_pub.encode())
 
 
 def test():
@@ -123,11 +153,10 @@ def test():
     priv_A = jwk.JWK.from_pem(keyA_priv.encode())
 
     sender = AuthenticatedUser.generate()
-    receiver = AuthenticatedUser(pub_A,pub_A,priv_A,priv_A)
+    receiver = AuthenticatedUser(pub_A, pub_A, priv_A, priv_A)
     log = sender.sign_access_log(AccessLog.generate())
     jwe = sender.encrypt(log, [receiver])
     print(json.dumps(json.loads(jwe), indent=4))
 
+
 proof_of_concept()
-
-
