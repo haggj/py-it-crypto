@@ -1,11 +1,10 @@
-import base64
-
 from logs.serializable import Serializable
 from utils import b64decode
 
 
 class AccessLog(Serializable):
-    def __init__(self, monitor: str, owner: str, tool: str, justification: str, timestamp: int, accessKind: str,
+    def __init__(self, monitor: str, owner: str, tool: str, justification: str, timestamp: int,
+                 accessKind: str,
                  dataType: list[str]):
         self.monitor = monitor
         self.owner = owner
@@ -22,7 +21,7 @@ class AccessLog(Serializable):
     @staticmethod
     def from_signed_log(log: 'SignedAccessLog') -> 'AccessLog':
         data = b64decode(log.payload)
-        return AccessLog.from_json(data)
+        return AccessLog.from_json(data.decode())
 
 
 class SignedAccessLog(Serializable):

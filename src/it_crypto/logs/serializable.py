@@ -1,4 +1,8 @@
 import json
+from typing import TypeVar, Type
+
+Self = TypeVar("Self", bound="Serializable")
+
 
 class Serializable:
 
@@ -7,7 +11,7 @@ class Serializable:
         return cls.from_json(data.decode())
 
     @classmethod
-    def from_json(cls, data: str) -> object:
+    def from_json(cls: Type[Self], data: str) -> Self:
         return cls(**json.loads(data))
 
     def to_json(self) -> str:

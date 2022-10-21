@@ -1,13 +1,11 @@
 import json
 
-from OpenSSL.crypto import load_certificate, FILETYPE_PEM, X509Store, X509StoreContext
-from cryptography import x509
-from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from jwcrypto import jwk
 from jwcrypto.common import json_decode
 
 from logs.access_log import AccessLog
 from user.authenticatedUser import AuthenticatedUser
+from user.user import UserManagement
 
 
 def proof_of_concept():
@@ -39,7 +37,7 @@ M3s6nA==
              'SVinZn6m4OwhGaoNZt0sMAoGCCqGSM49BAMCA0gAMEUCIQDtK9bAkAQHrAKmGPfV\n' + \
              'vg87jEqogKq85/q5V6jHZjawhwIgRUKldOc4fTa5/diT1OHKXLUW8uaDjZVNgv8Z\n' + \
              'HRVyXPs=\n' + \
-             '-----END CERTIFICATE-----';
+             '-----END CERTIFICATE-----'
 
     keyA_pub = '-----BEGIN CERTIFICATE-----\n' + \
                'MIIBIDCByQIJAOuo8ugAq2wUMAkGByqGSM49BAEwGTEXMBUGA1UEAwwORGV2ZWxv\n' + \
@@ -49,13 +47,13 @@ M3s6nA==
                'QLhKldBRk37co8zLv3naszAJBgcqhkjOPQQBA0cAMEQCIDnDoDAmt4x7SSWVmYEs\n' + \
                '+JwLesjmZTkw0KaiZa+2E6ocAiBzPKTBADCCWDCGbiJg4V/7KV1tSiOYC9EpFOrk\n' + \
                'kyxIiA==\n' + \
-               '-----END CERTIFICATE-----\n';
+               '-----END CERTIFICATE-----\n'
 
     keyA_priv = '-----BEGIN PRIVATE KEY-----\n' + \
                 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgAfMysADImEAjdKcY\n' + \
                 '2sAIulabkZDyLdShbh+etB+RlZShRANCAARiUXJ76nvYRnbP3F4E70kC219r92EP\n' + \
                 'oiFLpikvU6LFOTCI0DsJFT+28bCWB2RUk+FAuEqV0FGTftyjzMu/edqz\n' + \
-                '-----END PRIVATE KEY-----';
+                '-----END PRIVATE KEY-----'
 
     keyB_pub = '-----BEGIN CERTIFICATE-----\n' + \
                'MIIBITCByQIJAOuo8ugAq2wVMAkGByqGSM49BAEwGTEXMBUGA1UEAwwORGV2ZWxv\n' + \
@@ -65,13 +63,13 @@ M3s6nA==
                'yiyL8Sl6dypeN8iH7g3EtTAJBgcqhkjOPQQBA0gAMEUCIQCFDtrX9Mog3KA904Yp\n' + \
                'XduiWCtxVbGYGkSviklavTsNnAIgI8h9WNqHZdPJDVyhPwwS5oggTkGZah0LYfc3\n' + \
                '8qphvbY=\n' + \
-               '-----END CERTIFICATE-----';
+               '-----END CERTIFICATE-----'
 
     keyB_priv = '-----BEGIN PRIVATE KEY-----\n' + \
                 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg9XQgYCk62PfcaOKE\n' + \
                 'OlAerYQAx0EWg4eVfqMc1amEu0ehRANCAAQQtZ0LJJV5i3z3F1+dR9sCHv0JeT+A\n' + \
                 'W9TxT3zxSlIsQAbHfRonRl5xWl0qGVc7UbjKLIvxKXp3Kl43yIfuDcS1\n' + \
-                '-----END PRIVATE KEY-----';
+                '-----END PRIVATE KEY-----'
 
     # pub_A = jwk.JWK.from_pem(keyA_pub.encode())
     # priv_A = jwk.JWK.from_pem(keyA_priv.encode())
@@ -103,15 +101,17 @@ M3s6nA==
     # jwetoken.deserialize(token, key=priv_B)
     # payload = jwetoken.payload
 
-    sender = AuthenticatedUser.from_pem("sender", keyA_pub, keyA_pub, keyA_priv, keyA_priv)
-    receiver = AuthenticatedUser.from_pem("receiver", keyB_pub, keyB_pub, keyB_priv, keyB_priv)
+    sender = UserManagement.importAuthenticatedUser("sender", keyA_pub, keyA_pub, keyA_priv,
+                                                    keyA_priv)
+    receiver = UserManagement.importAuthenticatedUser("receiver", keyB_pub, keyB_pub, keyB_priv,
+                                                      keyB_priv)
     log_in = AccessLog.generate()
     log_in.monitor = sender.id
     log_in.owner = receiver.id
     singed_log = sender.sign_access_log(log_in)
     jwe = sender.encrypt(singed_log, [receiver])
 
-    def fetchUser(id:str):
+    def fetchUser(id: str):
         return sender
 
     signed_log = receiver.decrypt(jwe, fetchUser)
@@ -141,19 +141,19 @@ def test():
                'QLhKldBRk37co8zLv3naszAJBgcqhkjOPQQBA0cAMEQCIDnDoDAmt4x7SSWVmYEs\n' + \
                '+JwLesjmZTkw0KaiZa+2E6ocAiBzPKTBADCCWDCGbiJg4V/7KV1tSiOYC9EpFOrk\n' + \
                'kyxIiA==\n' + \
-               '-----END CERTIFICATE-----\n';
+               '-----END CERTIFICATE-----\n'
 
     keyA_priv = '-----BEGIN PRIVATE KEY-----\n' + \
                 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgAfMysADImEAjdKcY\n' + \
                 '2sAIulabkZDyLdShbh+etB+RlZShRANCAARiUXJ76nvYRnbP3F4E70kC219r92EP\n' + \
                 'oiFLpikvU6LFOTCI0DsJFT+28bCWB2RUk+FAuEqV0FGTftyjzMu/edqz\n' + \
-                '-----END PRIVATE KEY-----';
+                '-----END PRIVATE KEY-----'
 
     pub_A = jwk.JWK.from_pem(keyA_pub.encode())
     priv_A = jwk.JWK.from_pem(keyA_priv.encode())
 
-    sender = AuthenticatedUser.generate()
-    receiver = AuthenticatedUser(pub_A, pub_A, priv_A, priv_A)
+    sender = UserManagement.generateAuthenticatedUser()
+    receiver = AuthenticatedUser('sender', pub_A, pub_A, priv_A, priv_A)
     log = sender.sign_access_log(AccessLog.generate())
     jwe = sender.encrypt(log, [receiver])
     print(json.dumps(json.loads(jwe), indent=4))

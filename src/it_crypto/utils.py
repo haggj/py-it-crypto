@@ -1,6 +1,7 @@
 import base64
 
-from OpenSSL.crypto import load_certificate, FILETYPE_PEM, X509Store, X509StoreContext, X509StoreContextError
+from OpenSSL.crypto import load_certificate, FILETYPE_PEM, X509Store, X509StoreContext, \
+    X509StoreContextError
 
 
 def verifiy_certificate(trusted_certificate: str, untrusted_certificate: str) -> bool:
@@ -28,5 +29,4 @@ def b64decode(data: str) -> bytes:
     :param data: String to decode
     :return: Base64 decoded bytes
     """
-    return base64.b64decode((data+"==").encode())
-
+    return base64.b64decode((data + "==").encode())

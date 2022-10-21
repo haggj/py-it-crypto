@@ -2,13 +2,18 @@ import json
 from typing import Callable
 
 from jwcrypto.jwe import JWE
-from jwcrypto.jws import JWS, InvalidJWSSignature
+from jwcrypto.jws import JWS
 
 from logs.access_log import SignedAccessLog, AccessLog
 from logs.shared_header import SharedHeader
 from logs.shared_log import SharedLog
 from user.remoteUser import RemoteUser
 from utils import b64decode
+
+
+class DecryptionFailure(Exception):
+    """Raised when the decryption of a JWE fails"""
+    pass
 
 
 class DecryptionService:
@@ -19,7 +24,8 @@ class DecryptionService:
         decryption_result.deserialize(jwe, key=receiver.decryption_key)
         payload = decryption_result.plaintext.decode()
 
-        jws_shared_header: dict = json.loads(decryption_result.objects.pop('protected')).get('sharedHeader')
+        protected = decryption_result.objects.pop('protected')
+        jws_shared_header: dict = json.loads(protected).get('sharedHeader')
         jws_shared_log: dict = json.loads(payload)
 
         # Extract the creator specified within the SharedLog
@@ -36,31 +42,34 @@ class DecryptionService:
 
         # Verify if shareIds are identical
         if shared_header.shareId != shared_log.shareId:
-            raise Exception("Malformed data: ShareIds do not match!")
+            raise DecryptionFailure("Malformed data: ShareIds do not match!")
 
         # Verify if sharedHeader contains correct owner
         if access_log.owner != shared_header.owner:
-            raise Exception("Malformed data: The owner of the AccessLog is not specified as owner in the SharedHeader")
+            raise DecryptionFailure("Malformed data: The owner of the AccessLog "
+                                    "is not specified as owner in the SharedHeader")
 
         # Verify if either access_log.owner or access_log.monitor shared the log
         if not (shared_log.creator == access_log.monitor or shared_log.creator == access_log.owner):
-            raise Exception("Malformed data: Only the owner or the monitor of the AccessLog are allowed to share.")
+            raise DecryptionFailure("Malformed data: Only the owner or the "
+                                    "monitor of the AccessLog are allowed to share.")
         if shared_log.creator == access_log.monitor:
             if shared_header.receivers != [access_log.owner]:
-                raise Exception("Malformed data: Monitors can only share the data with the owner of the log.")
+                raise DecryptionFailure("Malformed data: Monitors can only"
+                                        " share the data with the owner of the log.")
 
         return SignedAccessLog.from_json(json.dumps(jws_access_log))
 
     @staticmethod
     def _claimed_creator(jws_shared_log: dict) -> str:
-        raw_json = b64decode(jws_shared_log.get('payload')).decode()
-        shared_log: SharedLog = SharedLog.from_json(raw_json)
+        raw_json = b64decode(str(jws_shared_log.get('payload')))
+        shared_log: SharedLog = SharedLog.from_json(raw_json.decode())
         return shared_log.creator
 
     @staticmethod
     def _claimed_monitor(jws_shared_log: dict) -> str:
-        raw_json = b64decode(jws_shared_log.get('payload')).decode()
-        access_log: AccessLog = AccessLog.from_json(raw_json)
+        raw_json = b64decode(str(jws_shared_log.get('payload')))
+        access_log: AccessLog = AccessLog.from_json(raw_json.decode())
         return access_log.monitor
 
     @staticmethod
@@ -71,7 +80,7 @@ class DecryptionService:
             jws.verify(sender.verification_certificate)
             return SharedHeader.from_json(jws.payload)
         except Exception:
-            raise Exception("Could not verify SharedHeader")
+            raise DecryptionFailure("Could not verify SharedHeader")
 
     @staticmethod
     def _verify_shared_log(jws_shared_log: dict, sender: RemoteUser) -> SharedLog:
@@ -81,15 +90,14 @@ class DecryptionService:
             jws.verify(sender.verification_certificate)
             return SharedLog.from_json(jws.payload)
         except Exception:
-            raise Exception("Could not verify SharedLog")
+            raise DecryptionFailure("Could not verify SharedLog")
 
     @staticmethod
-    def _verify_access_log(jws_access_log: SignedAccessLog, sender: RemoteUser) -> AccessLog:
+    def _verify_access_log(jws_access_log: dict, sender: RemoteUser) -> AccessLog:
         try:
             jws = JWS()
             jws.deserialize(json.dumps(jws_access_log))
             jws.verify(sender.verification_certificate)
             return AccessLog.from_json(jws.payload)
         except Exception:
-            raise Exception("Could not verify AccessLog")
-
+            raise DecryptionFailure("Could not verify AccessLog")

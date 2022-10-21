@@ -35,7 +35,7 @@ class EncryptionService:
         jwetoken = JWE(plaintext=jws_shared_log.encode(), protected=protected)
 
         for receiver in receivers:
-             jwetoken.add_recipient(receiver.encryption_certificate)
-             jwetoken.add_recipient(receiver.encryption_certificate)
+            jwetoken.add_recipient(receiver.encryption_certificate)
+            jwetoken.add_recipient(receiver.encryption_certificate)
 
         return jwetoken.serialize()

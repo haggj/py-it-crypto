@@ -1,4 +1,3 @@
-
 from logs.serializable import Serializable
 
 
@@ -7,4 +6,3 @@ class SharedLog(Serializable):
         self.log = log
         self.shareId = shareId
         self.creator = creator
-
