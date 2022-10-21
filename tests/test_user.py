@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from user.authenticatedUser import AuthenticatedUser
+from user.user import UserManagement
 
 
 class TestAuthenticatedUser(TestCase):
     def test_any(self):
-        AuthenticatedUser.generate()
+        UserManagement.generateAuthenticatedUser()

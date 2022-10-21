@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 from logs.access_log import SignedAccessLog, AccessLog
 from user.authenticatedUser import AuthenticatedUser
@@ -9,7 +9,7 @@ from user.user import UserManagement
 class ItCrypto:
     def __init__(self, fetch_user: Callable[[str], RemoteUser]):
         self.fetchUser = fetch_user
-        self.authenticatedUser = None
+        self.authenticatedUser : Optional[AuthenticatedUser] = None
 
     def login(self,
               id: str,

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from itcrypto import ItCrypto
 from logs.access_log import AccessLog
-from tests.testutils import create_fetch_sender, pub_A, priv_A, priv_B, pub_B
+from testutils import create_fetch_sender, pub_A, priv_A, priv_B, pub_B
 from user.user import UserManagement
 
 
