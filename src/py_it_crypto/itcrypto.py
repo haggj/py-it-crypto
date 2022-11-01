@@ -1,9 +1,9 @@
 from typing import Callable, List, Optional
 
-from logs.access_log import SignedAccessLog, AccessLog
-from user.authenticatedUser import AuthenticatedUser
-from user.remoteUser import RemoteUser
-from user.user import UserManagement
+from py_it_crypto.logs.access_log import SignedAccessLog, AccessLog
+from py_it_crypto.user.remoteUser import RemoteUser
+from py_it_crypto.user.authenticatedUser import AuthenticatedUser
+from py_it_crypto.user.user import UserManagement
 
 
 class ItCrypto:

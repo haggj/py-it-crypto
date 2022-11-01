@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from logs.access_log import AccessLog
+from py_it_crypto.logs.access_log import AccessLog
 from testutils import create_fetch_sender, verify_access_logs, pub_A, priv_A, pub_B, priv_B, pub_ca, \
     invalid_pub_ca
-from user.user import UserManagement
+from py_it_crypto.user.user import UserManagement
 
 
 class TestUser(TestCase):

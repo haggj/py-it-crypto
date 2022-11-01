@@ -4,7 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "py_it_crypto"
-version = "1.0.2"
+version = "1.0.5"
+dependencies = [
+    "jwcrypto~=1.4.2",
+    "pyOpenSSL~=22.1.0"
+]
+
 authors = [
   { name="Jonas Hagg" },
 ]

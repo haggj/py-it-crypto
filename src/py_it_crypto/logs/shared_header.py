@@ -1,4 +1,4 @@
-from logs.serializable import Serializable
+from py_it_crypto.logs.serializable import Serializable
 
 
 class SharedHeader(Serializable):

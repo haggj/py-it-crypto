@@ -4,11 +4,11 @@ from jwcrypto import jws
 from jwcrypto.common import json_encode
 from jwcrypto.jwk import JWK
 
-from crypto.decryption import DecryptionService
-from crypto.encryption import EncryptionService
-from globals import SIGNING_ALG
-from logs.access_log import AccessLog, SignedAccessLog
-from user.remoteUser import RemoteUser
+from py_it_crypto.crypto.decryption import DecryptionService
+from py_it_crypto.crypto.encryption import EncryptionService
+from py_it_crypto.globals import SIGNING_ALG
+from py_it_crypto.logs.access_log import AccessLog, SignedAccessLog
+from py_it_crypto.user.remoteUser import RemoteUser
 
 
 class AuthenticatedUser(RemoteUser):

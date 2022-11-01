@@ -9,7 +9,8 @@ For a detailed description of the implemented protocol, security considerations 
 
 ## Installation
 To use the go-it-crypto module you can install it with:
-`pip install py-it-crypto`
+
+`pip install py_it_crypto`
 
 ## Usage
 
@@ -23,25 +24,27 @@ This function needs to implement the following signature:
 Assuming `pub_A` and `priv_A` are PEM-encoded public/private keys of a user, the following code
 initializes the it-crypto library for the owner of this keypair.
 
- ```
+ ```python3
+from py_it_crypto.itcrypto import ItCrypto
+ 
 it_crypto = ItCrypto(fetch_sender)
 it_crypto.login(owner.id, pub_A, pub_A, priv_A, priv_A)
  ```
 The logged-in user can sign AccessLogs:
 
- ```
+ ```python3
 signedLog = it_crypto.sign_access_log(access_log)
  ```
 
 The logged-in user can encrypt SignedAccessLogs for other users:
 
- ```
+ ```python3
 cipher = it_crypto.encrypt(singed_log, [receiver1, receiver2])
  ```
 
 The logged-in user can decrypt tokens (this only succeeds if this user was specified as receiver during encryption):
 
- ```
+ ```python3
 received_signed_log = it_crypto.decrypt(cipher)
 received_access_log = received_signed_log.extract()
  ```

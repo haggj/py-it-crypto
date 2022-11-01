@@ -1,7 +1,7 @@
 from typing import List, Callable
 from unittest import TestCase
 
-from user.remoteUser import RemoteUser
+from py_it_crypto.user.remoteUser import RemoteUser
 
 
 def create_fetch_sender(users: List[RemoteUser]) -> Callable[[str], RemoteUser]:

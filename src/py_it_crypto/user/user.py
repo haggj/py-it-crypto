@@ -3,9 +3,9 @@ import uuid
 from jwcrypto.common import json_decode
 from jwcrypto.jwk import JWK
 
-from user.authenticatedUser import AuthenticatedUser
-from user.remoteUser import RemoteUser
-from utils import verifiy_certificate
+from py_it_crypto.user.authenticatedUser import AuthenticatedUser
+from py_it_crypto.user.remoteUser import RemoteUser
+from py_it_crypto.utils import verifiy_certificate
 
 
 class UserManagement:

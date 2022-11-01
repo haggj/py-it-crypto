@@ -3,10 +3,10 @@ import uuid
 
 from jwcrypto.jwe import JWE
 
-from logs.access_log import SignedAccessLog, AccessLog
-from logs.shared_header import SharedHeader
-from logs.shared_log import SharedLog
-from user.remoteUser import RemoteUser
+from py_it_crypto.logs.access_log import SignedAccessLog, AccessLog
+from py_it_crypto.logs.shared_header import SharedHeader
+from py_it_crypto.logs.shared_log import SharedLog
+from py_it_crypto.user.remoteUser import RemoteUser
 
 
 class EncryptionService:

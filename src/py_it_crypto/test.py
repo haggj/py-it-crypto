@@ -1,11 +1,7 @@
-import json
 
-from jwcrypto import jwk
-from jwcrypto.common import json_decode
 
-from logs.access_log import AccessLog
-from user.authenticatedUser import AuthenticatedUser
-from user.user import UserManagement
+from py_it_crypto.logs.access_log import AccessLog
+from py_it_crypto.user.user import UserManagement
 
 
 def proof_of_concept():
