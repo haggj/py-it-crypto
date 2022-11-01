@@ -3,7 +3,7 @@
 This python package implements E2EE encryption functionality for the inverse transparency toolchain [[1]](#1).
 It was developed in the scope of my [master thesis at TUM](https://github.com/haggj/Masterarbeit). 
 It is fully compatible with the corresponding Typescript library [ts-it-crypto](https://github.com/haggj/ts-it-crypto) and Golang library [go-it-crypto](https://github.com/haggj/go-it-crypto).
-The module was published to the [python package index](https://pypi.org/project/py-it-crypto/1.0.0/).
+The module was published to the [python package index](https://pypi.org/project/py-it-crypto).
 
 For a detailed description of the implemented protocol, security considerations and software architecture have a look to the thesis.
 
@@ -62,4 +62,4 @@ Make sure you are in the root directory of this repo. Then simply run
 ```python3 -m build```
 
 ### Upload Package to test.pypi
-```python3 -m twine upload --repository testpypi dist/py_it_crypto-0.0.1*```
+```python3 -m twine upload --repository pypi dist/py_it_crypto-0.0.1*```
