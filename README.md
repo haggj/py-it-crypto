@@ -3,7 +3,7 @@
 This python package implements E2EE encryption functionality for the inverse transparency toolchain [[1]](#1).
 It was developed in the scope of my [master thesis at TUM](https://github.com/haggj/Masterarbeit). 
 It is fully compatible with the corresponding Typescript library [ts-it-crypto](https://github.com/haggj/ts-it-crypto) and Golang library [go-it-crypto](https://github.com/haggj/go-it-crypto).
-The module was published to the [python package index](https://pkg.go.dev/github.com/haggj/go-it-crypto).
+The module was published to the [python package index](https://pypi.org/project/py-it-crypto/1.0.0/).
 
 For a detailed description of the implemented protocol, security considerations and software architecture have a look to the thesis.
 
