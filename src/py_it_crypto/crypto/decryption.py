@@ -20,10 +20,12 @@ class DecryptionService:
 
     @staticmethod
     def decrypt(jwe: str, receiver, fetch_user: Callable[[str], RemoteUser]) -> SignedAccessLog:
+        # Parse and decrypt the given JWE
         decryption_result = JWE()
         decryption_result.deserialize(jwe, key=receiver.decryption_key)
         payload = decryption_result.plaintext.decode()
 
+        # Parse the included jwsSharedHeader and jwsSharedLog objects
         protected = decryption_result.objects.pop('protected')
         jws_shared_header: dict = json.loads(protected).get('sharedHeader')
         jws_shared_log: dict = json.loads(payload)
@@ -39,6 +41,13 @@ class DecryptionService:
         jws_access_log: dict = shared_log.log
         monitor = fetch_user(DecryptionService._claimed_monitor(jws_access_log))
         access_log = DecryptionService._verify_access_log(jws_access_log, monitor)
+
+        """
+        Invariants, which need to hold:
+        1. AccessLog.owner == SharedHeader.owner
+        2. SharedLog.creator == AccessLog.monitor || SharedLog.creator == AccessLog.owner
+        3. SharedHeader.shareId = SharedLog.shareId
+        """
 
         # Verify if shareIds are identical
         if shared_header.shareId != shared_log.shareId:

@@ -36,6 +36,5 @@ class EncryptionService:
 
         for receiver in receivers:
             jwetoken.add_recipient(receiver.encryption_certificate)
-            jwetoken.add_recipient(receiver.encryption_certificate)
 
         return jwetoken.serialize()

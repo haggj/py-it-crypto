@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from itcrypto import ItCrypto
 from logs.access_log import AccessLog
-from testutils import create_fetch_sender, pub_A, priv_A, priv_B, pub_B
+from testutils import create_fetch_sender, pub_A, priv_A, priv_B, pub_B, verify_access_logs
 from user.user import UserManagement
 
 
@@ -44,24 +44,18 @@ class TestItCrypto(TestCase):
         log = AccessLog(monitor.id, owner.id, "tool", "just", 30, 'aggr', ["email", "address"])
         singed_log = monitor.sign_access_log(log)
 
-        # Login as owner and send log receiver
+        # Login as owner and send log to receiver
         it_crypto = ItCrypto(fetch_sender)
         it_crypto.login(owner.id, pub_B, pub_B, priv_B, priv_B)
         jwe = it_crypto.encrypt(singed_log, [owner, receiver])
 
         # Owner can decrypt
-        dec_log1 = it_crypto.decrypt(jwe)
+        received_signed_log1 = it_crypto.decrypt(jwe)
 
         # Receiver can decrypt
-        dec_log2 = receiver.decrypt(jwe, fetch_sender)
+        received_signed_log2 = receiver.decrypt(jwe, fetch_sender)
 
         # Verify decrypted logs
-        for dec_log in [dec_log1.extract(), dec_log2.extract()]:
-            self.assertEqual(log.owner, dec_log.owner)
-            self.assertEqual(log.monitor, dec_log.monitor)
-            self.assertEqual(log.tool, dec_log.tool)
-            self.assertEqual(log.justification, dec_log.justification)
-            self.assertEqual(log.timestamp, dec_log.timestamp)
-            self.assertEqual(log.accessKind, dec_log.accessKind)
-            self.assertEqual(log.dataType, dec_log.dataType)
+        verify_access_logs(log, received_signed_log1.extract())
+        verify_access_logs(received_signed_log1.extract(), received_signed_log2.extract())
 

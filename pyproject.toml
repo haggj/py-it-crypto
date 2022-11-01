@@ -3,12 +3,12 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "it_crypto"
-version = "0.0.4"
+name = "py_it_crypto"
+version = "1.0.0"
 authors = [
   { name="Jonas Hagg" },
 ]
-description = "A small example package"
+description = "E2EE for the inverse transparency toolchain"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -16,7 +16,3 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-[project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"

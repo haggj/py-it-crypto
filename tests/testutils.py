@@ -1,4 +1,5 @@
 from typing import List, Callable
+from unittest import TestCase
 
 from user.remoteUser import RemoteUser
 
@@ -12,7 +13,18 @@ def create_fetch_sender(users: List[RemoteUser]) -> Callable[[str], RemoteUser]:
 
     return _fetch_sender
 
-invalid_ca_pem = """-----BEGIN CERTIFICATE-----
+def verify_access_logs(first, second):
+    # Verify decrypted logs
+    test = TestCase()
+    test.assertEqual(first.owner, second.owner)
+    test.assertEqual(first.monitor, second.monitor)
+    test.assertEqual(first.tool, second.tool)
+    test.assertEqual(first.justification, second.justification)
+    test.assertEqual(first.timestamp, second.timestamp)
+    test.assertEqual(first.accessKind, second.accessKind)
+    test.assertEqual(first.dataType, second.dataType)
+
+invalid_pub_ca = """-----BEGIN CERTIFICATE-----
 MIIBIDCByAIJAOGzO/GXoxxnMAoGCCqGSM49BAMCMBkxFzAVBgNVBAMMDkRldmVs
 b3BtZW50IENBMB4XDTIyMTAyMDEyNTM1M1oXDTIzMTAyMDEyNTM1M1owGTEXMBUG
 A1UEAwwORGV2ZWxvcG1lbnQgQ0EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQ6
@@ -22,7 +34,7 @@ KiKEtPpfv6Rxe/Psq2XYy+H2AiA7fQHzny5CFJn4WsDDJGsgVOlnSD3gfLJ63uqq
 M3s6nA==
 -----END CERTIFICATE-----"""
 
-ca_pem = """-----BEGIN CERTIFICATE-----
+pub_ca = """-----BEGIN CERTIFICATE-----
 MIIBITCByAIJAJTQXJMDfhh5MAoGCCqGSM49BAMCMBkxFzAVBgNVBAMMDkRldmVs
 b3BtZW50IENBMB4XDTIyMTAxMDE1MzUzM1oXDTIzMTAxMDE1MzUzM1owGTEXMBUG
 A1UEAwwORGV2ZWxvcG1lbnQgQ0EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR0
