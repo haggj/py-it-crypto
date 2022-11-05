@@ -66,3 +66,9 @@ Make sure you are in the root directory of this repo. Then simply run
 
 ### Upload Package to test.pypi
 ```python3 -m twine upload --repository pypi dist/py_it_crypto-0.0.1*```
+
+## References
+<a id="1">[1]</a>
+Zieglmeier, Valentin and Pretschner, Alexander (2021).
+Trustworthy transparency by design (2021).
+https://arxiv.org/pdf/2103.10769.pdf
