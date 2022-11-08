@@ -11,7 +11,7 @@ from py_it_crypto.utils import verifiy_certificate
 class UserManagement:
 
     @staticmethod
-    def generateAuthenticatedUser() -> AuthenticatedUser:
+    def generateAuthenticatedUser(id = None) -> AuthenticatedUser:
         decryption_key = JWK.generate(kty='EC', crv='P-256')
         encryption_certificate = JWK()
         encryption_certificate.import_key(**json_decode(decryption_key.export_public()))
@@ -20,7 +20,7 @@ class UserManagement:
         verification_certificate = JWK()
         verification_certificate.import_key(**json_decode(signing_key.export_public()))
 
-        return AuthenticatedUser(id=str(uuid.uuid4()),
+        return AuthenticatedUser(id=id if id else str(uuid.uuid4()),
                                  encryption_certificate=encryption_certificate,
                                  verification_certificate=verification_certificate,
                                  decryption_key=decryption_key,
@@ -39,7 +39,7 @@ class UserManagement:
                                  signing_key=sign_key)
 
     @staticmethod
-    def generateRemoteUser() -> RemoteUser:
+    def generateRemoteUser(id = None) -> RemoteUser:
         decryption_key = JWK.generate(kty='EC', crv='P-256')
         encryption_certificate = JWK()
         encryption_certificate.import_key(**json_decode(decryption_key.export_public()))
@@ -48,7 +48,7 @@ class UserManagement:
         verification_certificate = JWK()
         verification_certificate.import_key(**json_decode(signing_key.export_public()))
 
-        return RemoteUser(id=str(uuid.uuid4()),
+        return RemoteUser(id=id if id else str(uuid.uuid4()),
                           encryption_certificate=encryption_certificate,
                           verification_certificate=verification_certificate)
 

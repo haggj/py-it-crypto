@@ -9,7 +9,7 @@ from py_it_crypto.user.user import UserManagement
 class ItCrypto:
     def __init__(self, fetch_user: Callable[[str], RemoteUser]):
         self.fetchUser = fetch_user
-        self.authenticatedUser : Optional[AuthenticatedUser] = None
+        self.user : Optional[AuthenticatedUser] = None
 
     def login(self,
               id: str,
@@ -17,7 +17,7 @@ class ItCrypto:
               verification_certificate: str,
               decryption_key: str,
               signing_key: str) -> None:
-        self.authenticatedUser = UserManagement.importAuthenticatedUser(
+        self.user = UserManagement.importAuthenticatedUser(
             id,
             encryption_certificate,
             verification_certificate,
@@ -26,16 +26,16 @@ class ItCrypto:
         )
 
     def encrypt(self, log: SignedAccessLog, receivers: List[RemoteUser]) -> str:
-        if not self.authenticatedUser:
+        if not self.user:
             raise ValueError("Before you can encrypt you need to login a user.")
-        return self.authenticatedUser.encrypt(log, receivers)
+        return self.user.encrypt(log, receivers)
 
     def decrypt(self, jwe: str) -> SignedAccessLog:
-        if not self.authenticatedUser:
+        if not self.user:
             raise ValueError("Before you can decrypt you need to login a user.")
-        return self.authenticatedUser.decrypt(jwe, self.fetchUser)
+        return self.user.decrypt(jwe, self.fetchUser)
 
     def sign_access_log(self, log: AccessLog) -> SignedAccessLog:
-        if not self.authenticatedUser:
+        if not self.user:
             raise ValueError("Before you can sign data you need to login a user.")
-        return self.authenticatedUser.sign_access_log(log)
+        return self.user.sign_access_log(log)
