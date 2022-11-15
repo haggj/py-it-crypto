@@ -29,7 +29,7 @@ MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgAfMysADImEAjdKcY
 oiFLpikvU6LFOTCI0DsJFT+28bCWB2RUk+FAuEqV0FGTftyjzMu/edqz
 -----END PRIVATE KEY-----"""
 
-def fetch_sender(id: str) -> RemoteUser:
+def fetch_user(id: str) -> RemoteUser:
     """
     Resolve id to RemoteUser object.
     Usually this function requests your API to fetch user keys.
@@ -38,7 +38,7 @@ def fetch_sender(id: str) -> RemoteUser:
         return UserManagement.importRemoteUser("monitor", pub_A, pub_A, pub_ca)
 
 # This code initializes the it-crypto library with the private key pub_A and secret key priv_A.
-it_crypto = ItCrypto(fetch_sender)
+it_crypto = ItCrypto(fetch_user)
 it_crypto.login("monitor", pub_A, pub_A, priv_A, priv_A)
 
 # The logged-in user can create singed access logs.

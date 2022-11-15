@@ -1,8 +1,10 @@
+from typing import List
+
 from py_it_crypto.logs.serializable import Serializable
 
 
 class SharedLog(Serializable):
-    def __init__(self, log: dict, shareId: str, creator: str):
+    def __init__(self, log: dict, recipients: List[str], creator: str):
         self.log = log
-        self.shareId = shareId
+        self.recipients = recipients
         self.creator = creator
