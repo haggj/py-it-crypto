@@ -13,23 +13,23 @@ class TestItCrypto(TestCase):
         receiver = UserManagement.generateAuthenticatedUser()
 
         fetch_sender = create_fetch_sender([sender, receiver])
-        log = sender.sign_access_log(AccessLog.generate())
-        jwe = sender.encrypt(log, [receiver])
+        log = sender.sign_log(AccessLog.generate())
+        jwe = sender.encrypt_log(log, [receiver])
 
         it_crypto = ItCrypto(fetch_sender)
 
         with self.assertRaises(ValueError) as context:
-            it_crypto.encrypt(log, [receiver])
+            it_crypto.encrypt_log(log, [receiver])
         self.assertTrue(
             'Before you can encrypt you need to login a user.' in str(context.exception))
 
         with self.assertRaises(ValueError) as context:
-            it_crypto.sign_access_log(log)
+            it_crypto.sign_log(log)
         self.assertTrue(
             'Before you can sign data you need to login a user.' in str(context.exception))
 
         with self.assertRaises(ValueError) as context:
-            it_crypto.decrypt(jwe)
+            it_crypto.decrypt_log(jwe)
         self.assertTrue(
             'Before you can decrypt you need to login a user.' in str(context.exception))
 
@@ -42,18 +42,18 @@ class TestItCrypto(TestCase):
 
         # Log is signed by a monitor
         log = AccessLog(monitor.id, owner.id, "tool", "just", 30, 'aggr', ["email", "address"])
-        singed_log = monitor.sign_access_log(log)
+        singed_log = monitor.sign_log(log)
 
         # Login as owner and send log to receiver
         it_crypto = ItCrypto(fetch_sender)
         it_crypto.login(owner.id, pub_B, pub_B, priv_B, priv_B)
-        jwe = it_crypto.encrypt(singed_log, [owner, receiver])
+        jwe = it_crypto.encrypt_log(singed_log, [owner, receiver])
 
         # Owner can decrypt
-        received_signed_log1 = it_crypto.decrypt(jwe)
+        received_signed_log1 = it_crypto.decrypt_log(jwe)
 
         # Receiver can decrypt
-        received_signed_log2 = receiver.decrypt(jwe, fetch_sender)
+        received_signed_log2 = receiver.decrypt_log(jwe, fetch_sender)
 
         # Verify decrypted logs
         verify_access_logs(log, received_signed_log1.extract())

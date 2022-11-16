@@ -26,17 +26,17 @@ class TestCompatibilityGo(TestCase):
 
     def test_single_receiver(self):
         """Test if receiver can decrypt goDecryptB"""
-        log = receiver.decrypt(goDecryptB, create_fetch_sender([sender]))
+        log = receiver.decrypt_log(goDecryptB, create_fetch_sender([sender]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "go-it-crypto")
 
     def test_multiple_receiver(self):
         """Test if receiver and sender can decrypt goDecryptB"""
-        log = receiver.decrypt(goDecryptAB, create_fetch_sender([sender, receiver]))
+        log = receiver.decrypt_log(goDecryptAB, create_fetch_sender([sender, receiver]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "go-it-crypto")
 
-        log = sender.decrypt(goDecryptAB, create_fetch_sender([sender, receiver]))
+        log = sender.decrypt_log(goDecryptAB, create_fetch_sender([sender, receiver]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "go-it-crypto")
 
@@ -46,17 +46,17 @@ class TestCompatibilityJS(TestCase):
 
     def test_single_receiver(self):
         """Test if receiver can decrypt jsDecryptB"""
-        log = receiver.decrypt(jsDecryptB, create_fetch_sender([sender]))
+        log = receiver.decrypt_log(jsDecryptB, create_fetch_sender([sender]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "js-it-crypto")
 
     def test_multiple_receiver(self):
         """Test if receiver and sender can decrypt jsDecryptB"""
-        log = receiver.decrypt(jsDecryptAB, create_fetch_sender([sender, receiver]))
+        log = receiver.decrypt_log(jsDecryptAB, create_fetch_sender([sender, receiver]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "js-it-crypto")
 
-        log = sender.decrypt(jsDecryptAB, create_fetch_sender([sender, receiver]))
+        log = sender.decrypt_log(jsDecryptAB, create_fetch_sender([sender, receiver]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "js-it-crypto")
 
@@ -66,17 +66,17 @@ class TestCompatibilityPython(TestCase):
 
     def test_single_receiver(self):
         """Test if receiver can decrypt pyDecryptB"""
-        log = receiver.decrypt(pythonDecryptB, create_fetch_sender([sender]))
+        log = receiver.decrypt_log(pythonDecryptB, create_fetch_sender([sender]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "py-it-crypto")
 
     def test_multiple_receiver(self):
         """Test if receiver and sender can decrypt pyDecryptB"""
-        log = receiver.decrypt(pythonDecryptAB, create_fetch_sender([sender, receiver]))
+        log = receiver.decrypt_log(pythonDecryptAB, create_fetch_sender([sender, receiver]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "py-it-crypto")
 
-        log = sender.decrypt(pythonDecryptAB, create_fetch_sender([sender, receiver]))
+        log = sender.decrypt_log(pythonDecryptAB, create_fetch_sender([sender, receiver]))
         accessLog = log.extract()
         self.assertEqual(accessLog.justification, "py-it-crypto")
 
@@ -90,8 +90,8 @@ class TestCreateCompatibilityTokens(TestCase):
         access_log.monitor = sender.id
         access_log.justification = "py-it-crypto"
 
-        signed_log = sender.sign_access_log(access_log)
-        pythonDecryptB = sender.encrypt(signed_log, [receiver])
-        pythonDecryptAB = receiver.encrypt(signed_log, [receiver, sender])
+        signed_log = sender.sign_log(access_log)
+        pythonDecryptB = sender.encrypt_log(signed_log, [receiver])
+        pythonDecryptAB = receiver.encrypt_log(signed_log, [receiver, sender])
         print(pythonDecryptB)
         print(pythonDecryptAB)

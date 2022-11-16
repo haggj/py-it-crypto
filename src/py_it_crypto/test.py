@@ -65,15 +65,15 @@ M3s6nA==
     log_in.monitor = sender.id
     log_in.owner = receiver.id
     log_in.justification = "py-it-crypto"
-    singed_log = sender.sign_access_log(log_in)
-    jwe = receiver.encrypt(singed_log, [receiver, sender])
+    singed_log = sender.sign_log(log_in)
+    jwe = receiver.encrypt_log(singed_log, [receiver, sender])
 
     print(jwe)
 
     def fetchUser(id: str):
         return receiver
 
-    signed_log = receiver.decrypt(jwe, fetchUser)
+    signed_log = receiver.decrypt_log(jwe, fetchUser)
     log_out = signed_log.extract()
     print(log_in)
     print(log_out)

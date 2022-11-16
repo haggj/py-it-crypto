@@ -21,10 +21,10 @@ class AuthenticatedUser(RemoteUser):
         self.decryption_key = decryption_key
         self.signing_key = signing_key
 
-    def encrypt(self, log: SignedAccessLog, receivers: list[RemoteUser]) -> str:
+    def encrypt_log(self, log: SignedAccessLog, receivers: list[RemoteUser]) -> str:
         return EncryptionService.encrypt(jwsAccessLog=log, sender=self, receivers=receivers)
 
-    def decrypt(self, jwe: str, fetch_user: Callable[[str], RemoteUser]) -> SignedAccessLog:
+    def decrypt_log(self, jwe: str, fetch_user: Callable[[str], RemoteUser]) -> SignedAccessLog:
         return DecryptionService.decrypt(jwe=jwe, receiver=self, fetch_user=fetch_user)
 
     def sign_data(self, data: bytes) -> str:
@@ -32,6 +32,6 @@ class AuthenticatedUser(RemoteUser):
         token.add_signature(self.signing_key, None, json_encode({"alg": SIGNING_ALG}))
         return token.serialize()
 
-    def sign_access_log(self, log: AccessLog) -> SignedAccessLog:
+    def sign_log(self, log: AccessLog) -> SignedAccessLog:
         singed = self.sign_data(log.to_bytes())
         return SignedAccessLog.from_json(singed)

@@ -43,15 +43,15 @@ it_crypto.login("monitor", pub_A, pub_A, priv_A, priv_A)
 
 # The logged-in user can create singed access logs.
 log = AccessLog(it_crypto.user.id, "owner", "tool", "just", 1234, "kind", ["data", "datat more"])
-signed_log = it_crypto.sign_access_log(log)
+signed_log = it_crypto.sign_log(log)
 
 # The logged-in user can encrypt the logs for others.
 owner = UserManagement.generateAuthenticatedUser("owner")
-jwe = it_crypto.encrypt(signed_log, [owner])
+jwe = it_crypto.encrypt_log(signed_log, [owner])
 
 # The logged-in user can decrypt logs intended for him
 it_crypto.user = owner
-received_signed_log = it_crypto.decrypt(jwe)
+received_signed_log = it_crypto.decrypt_log(jwe)
 received_log = received_signed_log.extract()
 print(received_log)
 

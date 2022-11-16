@@ -18,9 +18,9 @@ class TestUser(TestCase):
         access_log.owner = receiver.id
         access_log.monitor = sender.id
 
-        signed_log = sender.sign_access_log(access_log)
-        cipher = sender.encrypt(signed_log,[receiver])
-        received_signed_log = receiver.decrypt(cipher, fetch_user)
+        signed_log = sender.sign_log(access_log)
+        cipher = sender.encrypt_log(signed_log, [receiver])
+        received_signed_log = receiver.decrypt_log(cipher, fetch_user)
 
         verify_access_logs(access_log, received_signed_log.extract())
 
@@ -39,18 +39,18 @@ class TestUser(TestCase):
         access_log.owner = owner.id
         access_log.monitor = monitor.id
 
-        signed_log = monitor.sign_access_log(access_log)
-        cipher = monitor.encrypt(signed_log, [owner])
+        signed_log = monitor.sign_log(access_log)
+        cipher = monitor.encrypt_log(signed_log, [owner])
 
         # 2. Step: Owner can decrypt log
-        received_signed_log1 = owner.decrypt(cipher, fetch_user)
+        received_signed_log1 = owner.decrypt_log(cipher, fetch_user)
 
         # 3. Step: Owner shares with receiver
-        cipher = owner.encrypt(signed_log, [owner, receiver])
+        cipher = owner.encrypt_log(signed_log, [owner, receiver])
 
         # 4. Step: Owner and receiver can decrypt
-        received_signed_log2 = owner.decrypt(cipher, fetch_user)
-        received_signed_log3 = receiver.decrypt(cipher, fetch_user)
+        received_signed_log2 = owner.decrypt_log(cipher, fetch_user)
+        received_signed_log3 = receiver.decrypt_log(cipher, fetch_user)
 
         verify_access_logs(access_log, received_signed_log1.extract())
         verify_access_logs(received_signed_log1.extract(), received_signed_log2.extract())
@@ -66,9 +66,9 @@ class TestUser(TestCase):
         access_log.owner = receiver.id
         access_log.monitor = sender.id
 
-        signed_log = sender.sign_access_log(access_log)
-        cipher = sender.encrypt(signed_log, [receiver])
-        received_signed_log = receiver.decrypt(cipher, fetch_user)
+        signed_log = sender.sign_log(access_log)
+        cipher = sender.encrypt_log(signed_log, [receiver])
+        received_signed_log = receiver.decrypt_log(cipher, fetch_user)
 
         verify_access_logs(access_log, received_signed_log.extract())
 
@@ -82,8 +82,8 @@ class TestUser(TestCase):
         access_log.owner = receiver.id
         access_log.monitor = sender.id
 
-        signed_log = sender.sign_access_log(access_log)
-        cipher = sender.encrypt(signed_log, [receiver])
+        signed_log = sender.sign_log(access_log)
+        cipher = sender.encrypt_log(signed_log, [receiver])
 
     def test_import_user_signed_fails(self):
         """Import users with CA signed keys fails"""

@@ -24,7 +24,6 @@ The function needs to implement the following method signature:
 
 Assuming `pub_A` and `priv_A` are PEM-encoded public/private keys of a user, the following code is a complete example of how to use the library:
 
-
  ```python3
 from py_it_crypto.itcrypto import ItCrypto
 from py_it_crypto.logs.access_log import AccessLog
@@ -57,6 +56,7 @@ MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgAfMysADImEAjdKcY
 oiFLpikvU6LFOTCI0DsJFT+28bCWB2RUk+FAuEqV0FGTftyjzMu/edqz
 -----END PRIVATE KEY-----"""
 
+
 def fetch_sender(id: str) -> RemoteUser:
     """
     Resolve id to RemoteUser object.
@@ -65,21 +65,22 @@ def fetch_sender(id: str) -> RemoteUser:
     if id == "monitor":
         return UserManagement.importRemoteUser("monitor", pub_A, pub_A, pub_ca)
 
+
 # This code initializes the it-crypto library with the private key pub_A and secret key priv_A.
 it_crypto = ItCrypto(fetch_sender)
 it_crypto.login("monitor", pub_A, pub_A, priv_A, priv_A)
 
 # The logged-in user can create singed access logs.
 log = AccessLog(it_crypto.user.id, "owner", "tool", "just", 1234, "kind", ["data", "datat more"])
-signed_log = it_crypto.sign_access_log(log)
+signed_log = it_crypto.sign_log(log)
 
 # The logged-in user can encrypt the logs for others.
 owner = UserManagement.generateAuthenticatedUser("owner")
-jwe = it_crypto.encrypt(signed_log, [owner])
+jwe = it_crypto.encrypt_log(signed_log, [owner])
 
 # The logged-in user can decrypt logs intended for him
 it_crypto.user = owner
-received_signed_log = it_crypto.decrypt(jwe)
+received_signed_log = it_crypto.decrypt_log(jwe)
 received_log = received_signed_log.extract()
 print(received_log)
  ```
