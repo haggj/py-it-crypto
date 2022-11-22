@@ -42,6 +42,7 @@ class TestItCrypto(TestCase):
 
         # Log is signed by a monitor
         log = AccessLog(monitor.id, owner.id, "tool", "just", 30, 'aggr', ["email", "address"])
+        monitor.isMonitor = True
         singed_log = monitor.sign_log(log)
 
         # Login as owner and send log to receiver

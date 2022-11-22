@@ -18,6 +18,7 @@ class TestUser(TestCase):
         access_log.owner = receiver.id
         access_log.monitor = sender.id
 
+        sender.isMonitor = True
         signed_log = sender.sign_log(access_log)
         cipher = sender.encrypt_log(signed_log, [receiver])
         received_signed_log = receiver.decrypt_log(cipher, fetch_user)
@@ -39,6 +40,7 @@ class TestUser(TestCase):
         access_log.owner = owner.id
         access_log.monitor = monitor.id
 
+        monitor.isMonitor = True
         signed_log = monitor.sign_log(access_log)
         cipher = monitor.encrypt_log(signed_log, [owner])
 
@@ -66,6 +68,7 @@ class TestUser(TestCase):
         access_log.owner = receiver.id
         access_log.monitor = sender.id
 
+        sender.isMonitor = True
         signed_log = sender.sign_log(access_log)
         cipher = sender.encrypt_log(signed_log, [receiver])
         received_signed_log = receiver.decrypt_log(cipher, fetch_user)

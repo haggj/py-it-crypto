@@ -5,6 +5,7 @@ class RemoteUser:
     id: str
     encryption_certificate: JWK
     verification_certificate: JWK
+    isMonitor: bool = False
 
     def __init__(self, id: str, encryption_certificate: JWK, verification_certificate: JWK):
         self.id = id
