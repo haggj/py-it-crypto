@@ -18,7 +18,7 @@ jsDecryptAB = '{"ciphertext":"2DuUFjjm2c-8EKuWi4QtOM6H4UW2ThQNknyO49QKiAKXfjfju4
 
 
 sender = UserManagement.importAuthenticatedUser('sender', pub_A, pub_A, priv_A, priv_A)
-sender.isMonitor = True
+sender.is_monitor = True
 receiver = UserManagement.importAuthenticatedUser('receiver', pub_B, pub_B, priv_B, priv_B)
 
 

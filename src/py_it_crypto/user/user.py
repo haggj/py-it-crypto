@@ -56,6 +56,7 @@ class UserManagement:
     def importRemoteUser(id: str,
                          encryption_certificate: str,
                          verification_certificate: str,
+                         is_monitor: bool,
                          trusted_certificate: str) -> RemoteUser:
         if not verifiy_certificate(trusted_certificate, encryption_certificate):
             raise Exception("Could not verify encryption certificate")
@@ -67,4 +68,5 @@ class UserManagement:
 
         return RemoteUser(id=id,
                           encryption_certificate=enc_cert,
-                          verification_certificate=vrf_cert)
+                          verification_certificate=vrf_cert,
+                          is_monitor=is_monitor)

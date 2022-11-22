@@ -35,7 +35,7 @@ def fetch_user(id: str) -> RemoteUser:
     Usually this function requests your API to fetch user keys.
     """
     if id == "monitor":
-        return UserManagement.importRemoteUser("monitor", pub_A, pub_A, pub_ca)
+        return UserManagement.importRemoteUser("monitor", pub_A, pub_A, True, pub_ca)
 
 # This code initializes the it-crypto library with the private key pub_A and secret key priv_A.
 it_crypto = ItCrypto(fetch_user)

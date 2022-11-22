@@ -14,7 +14,7 @@ class TestPerformance(TestCase):
         sender = UserManagement.generateAuthenticatedUser("owner")
         monitor = UserManagement.generateAuthenticatedUser("monitor")
 
-        monitor.isMonitor = True
+        monitor.is_monitor = True
         access_log = AccessLog.generate()
         signed_log = monitor.sign_log(access_log)
 

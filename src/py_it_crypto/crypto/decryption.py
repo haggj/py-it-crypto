@@ -88,7 +88,7 @@ class DecryptionService:
 
     @staticmethod
     def _verify_access_log(jws_access_log: dict, sender: RemoteUser) -> AccessLog:
-        if not sender.isMonitor:
+        if not sender.is_monitor:
             raise DecryptionFailure("Claimed monitor is not authorized to sign logs.")
 
         try:
