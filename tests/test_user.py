@@ -1,3 +1,6 @@
+import base64
+import cProfile
+import json
 from unittest import TestCase
 
 from py_it_crypto.logs.access_log import AccessLog
@@ -78,7 +81,7 @@ class TestUser(TestCase):
     def test_import_user_signed(self):
         """Import users with CA signed keys"""
         sender = UserManagement.importAuthenticatedUser('sender', pub_A, pub_A, priv_A, priv_A)
-        receiver = UserManagement.importRemoteUser('receiver', pub_B, pub_B, pub_ca)
+        receiver = UserManagement.importRemoteUser('receiver', pub_B, pub_B, False, pub_ca)
         fetch_user = create_fetch_sender([sender])
 
         access_log = AccessLog.generate()
@@ -93,5 +96,5 @@ class TestUser(TestCase):
         sender = UserManagement.importAuthenticatedUser('sender', pub_A, pub_A, priv_A, priv_A)
 
         with self.assertRaises(Exception) as context:
-            UserManagement.importRemoteUser('receiver', pub_B, pub_B, invalid_pub_ca)
+            UserManagement.importRemoteUser('receiver', pub_B, pub_B, False, invalid_pub_ca)
         self.assertTrue('Could not verify encryption certificate' in str(context.exception))

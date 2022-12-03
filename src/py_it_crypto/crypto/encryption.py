@@ -1,5 +1,6 @@
 
 from jwcrypto.jwe import JWE
+from py_it_crypto.globals import KEY_WRAP_ALG, ENCRYPTION_ALG
 
 from py_it_crypto.logs.access_log import SignedAccessLog, AccessLog
 from py_it_crypto.logs.shared_log import SharedLog
@@ -19,8 +20,8 @@ class EncryptionService:
 
         # Sender creates the encrypted JWE
         protected = {
-            "alg": "ECDH-ES+A256KW",
-            "enc": "A256GCM",
+            "alg": KEY_WRAP_ALG,
+            "enc": ENCRYPTION_ALG,
             "recipients": receiver_ids,
             "owner": AccessLog.from_signed_log(jwsAccessLog).owner
         }

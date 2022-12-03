@@ -23,7 +23,7 @@ class TestPerformance(TestCase):
 
         sender.encrypt_log(signed_log, receivers[:1]) # First encryption is slower than others
 
-        iterations = [1,2,3,5,10]
+        iterations = [1, 2, 3, 5, 10]
 
         for i in iterations:
             enc_sum = 0.0
@@ -40,4 +40,5 @@ class TestPerformance(TestCase):
                 end = time.time()
                 dec_sum += (end - start)*1000
 
-            print(round(enc_sum/rounds,2))
+            result = round(enc_sum/rounds,2)
+            # print(result)
