@@ -4,7 +4,7 @@ from OpenSSL.crypto import load_certificate, FILETYPE_PEM, X509Store, X509StoreC
     X509StoreContextError
 
 
-def verifiy_certificate(trusted_certificate: str, untrusted_certificate: str) -> bool:
+def verify_certificate(trusted_certificate: str, untrusted_certificate: str) -> bool:
     """
     Verifiy if a untrusted certificate is signed by a trusted certificate.
     :param trusted_certificate: The trusted root certificate.

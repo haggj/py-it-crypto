@@ -1,6 +1,6 @@
 # Py-It-Crypto
 
-This typescript module implements end-to-end encryption (E2EE) functionality for the inverse transparency toolchain [[1]](#1).
+This python module implements end-to-end encryption (E2EE) functionality for the inverse transparency toolchain [[1]](#1).
 It was developed in the scope of my [master thesis at TUM](https://github.com/haggj/Masterarbeit). 
 It is fully compatible with the corresponding Typescript library [ts-it-crypto](https://github.com/haggj/ts-it-crypto) and Golang library [go-it-crypto](https://github.com/haggj/go-it-crypto).
 The module was published to the [python package index](https://pypi.org/project/py-it-crypto).

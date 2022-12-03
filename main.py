@@ -29,6 +29,7 @@ MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgAfMysADImEAjdKcY
 oiFLpikvU6LFOTCI0DsJFT+28bCWB2RUk+FAuEqV0FGTftyjzMu/edqz
 -----END PRIVATE KEY-----"""
 
+
 def fetch_user(id: str) -> RemoteUser:
     """
     Resolve id to RemoteUser object.
@@ -36,13 +37,15 @@ def fetch_user(id: str) -> RemoteUser:
     """
     if id == "monitor":
         return UserManagement.importRemoteUser("monitor", pub_A, pub_A, True, pub_ca)
+    raise Exception("User not found")
+
 
 # This code initializes the it-crypto library with the private key pub_A and secret key priv_A.
 it_crypto = ItCrypto(fetch_user)
 it_crypto.login("monitor", pub_A, pub_A, priv_A, priv_A)
 
 # The logged-in user can create singed access logs.
-log = AccessLog(it_crypto.user.id, "owner", "tool", "just", 1234, "kind", ["data", "datat more"])
+log = AccessLog("monitor", "owner", "tool", "just", 1234, "kind", ["data", "datat more"])
 signed_log = it_crypto.sign_log(log)
 
 # The logged-in user can encrypt the logs for others.
